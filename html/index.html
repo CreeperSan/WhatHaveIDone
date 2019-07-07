@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        html,body{ background: #FFF; padding: 0; margin: 0;width: 100%;height: 100%; }
+        body{ display: flex; flex-direction: row; }
+
+        .body{ width: 100%;height: 100%;display: flex; flex-direction: row; }
+        .left-nav{ display: flex; flex-direction: column;justify-content: space-between;width: 30%;height: 100%;border: 0px gray solid;border-right-width: 1px;max-width: 300px; }
+        .right-content{ display: flex; flex-direction: column;background-color: #eee;flex: 1;overflow-y: scroll;height: 100%;flex: 1;align-items: center; }
+
+        .fav-buton{ background: crimson; width:24px; height:24px; padding:8px;border-radius:100%;position: fixed;bottom: 0;right: 0;margin: 16px;cursor: pointer;transition-duration: 300ms; }
+        .fav-buton:hover{ background: crimson; width:24px; height:24px; padding:8px;border-radius:100%;position: fixed;bottom: 0;right: 0;margin: 16px;box-shadow: #333 0 0 12px;transition-duration: 300ms; }
+
+        .left-header-img{ width: 100% }
+        .left-table-list{ display: flex; flex-direction:column;align-items:center;padding: 4px 8px;background: #FFF;flex: 1;flex-direction: column;overflow-y: scroll;overflow-x: hidden; }
+        .left-table-item{ padding: 8px 3%;width: 94%;cursor: default;transition-duration: 300ms; }
+        .left-table-item-selected{ padding: 8px 3%;width: 94%;cursor: default;transition-duration: 300ms;color: lime; }
+        .left-table-item:hover{ padding: 8px 5%px;width: 90%;cursor: pointer;background-color:#DDD;transition-duration: 300ms; }
+
+        .left-bottom{ border: gray 0 solid;border-top-width: 1px;display: flex;flex-direction: row; }
+        .left-bottom-item{ display: flex;flex-direction: row;align-items: center;padding: 6px;flex: 1;transition-duration: 300ms;cursor: pointer; }
+        .left-bottom-item:hover{ display: flex;flex-direction: row;align-items: center;padding: 6px;flex: 1;background-color: lightgray;transition-duration: 300ms; }
+        .left-bottom-icon{ width: 28px;height:28px; }
+        .left-bottom-text{ color: gray;margin-left: 8px; }
+
+        .right-list-item{ width:100%;display: flex;flex-direction: column;align-items: center; }
+        .right-item-time{ margin-top: 32px; color: white;background-color: gray;padding: 6px 12px;font-size: 0.8em;border-radius: 16px; }
+        .right-item-text-div{ padding: 4px 4%;box-shadow: lightgray 0 0 6px;width: 86%;border-radius: 8px;background: #FFF;margin-bottom: 8px;margin: 6px 0;transition-duration: 300ms;cursor: pointer; }
+        .right-item-text-div:hover{ padding: 10px 4%;box-shadow: lightgray 0 0 9px;width: 86%;border-radius: 8px;background: #FFF;margin-bottom: 8px;margin: 6px 0;transition-duration: 300ms; }
+        .right-item-title{ color: black;margin-bottom: 8px; }
+        .right-item-duration{ color: gray; }
+        .right-item-content{ color: black;font-size: 0.8em;margin-top: 0 }
+
+        .right-hint-div{ display: flex;flex: 1;justify-content: center;align-items: center;flex-direction: column; }
+        .right-hint-icon{ width: 64px;height:64px; }
+        .right-hint-text{ color: black;margin-top: 8px; }
+
+        .dialog-background{ position: fixed;background-color: rgba(0, 0, 0, 0.5);width: 100%;height: 100%;z-index: 999;display: flex;justify-content: center;align-items: center; }
+        .dialog-body{ background: white;max-width: 90%;max-height: 90%;margin: 0 auto;padding: 3%;border-radius: 12px; }
+        .dialog-title{ font-size: 1.3em;color: royalblue; }
+        .dialog-action-div{ display: flex;flex-direction: row;justify-content: flex-end;align-items: center;width: 100%;margin-top: 16px; }
+        .dialog-action-positive-button{ padding: 8px 24px;color: royalblue;cursor: pointer;transition-duration: 300ms;border-radius: 4px; }
+        .dialog-action-positive-button:hover{ padding: 8px 24px;color: royalblue;cursor: pointer;transition-duration: 300ms;background-color: lightgray; }
+        .dialog-action-danger-button{ padding: 8px 24px;color: red;cursor: pointer;transition-duration: 300ms;border-radius: 4px;align-self: flex-end; }
+        .dialog-action-danger-button:hover{ padding: 8px 24px;color: red;cursor: pointer;transition-duration: 300ms;background-color: lightgray; }
+        .dialog-action-negative-button{ padding: 8px 24px;color: gray;cursor: pointer;transition-duration: 300ms;border-radius: 4px; }
+        .dialog-action-negative-button:hover{ padding: 8px 24px;color: gray;cursor: pointer;transition-duration: 300ms;background-color: lightgray; }
+
+        .dialog-thing-item{ display: flex;flex-direction: row;align-content: center;padding: 6px 12px; }
+        .dialog-thing-name{ width:160px; }
+        .dialog-thing-input{ width: 300px;outline: none;padding: 4px 8px; }
+
+    </style>
+    <script src="lib/vue/vue.js"></script>
+    <title>What Have I Done</title>
+</head>
+<body>
+    <div class="body" id="app">
+
+            <img class="fav-buton" src="icon/ic_add_white.png" v-on:click="onFABClick" v-if="thingItemList != null && thingItemList != undefine"/>
+            <div class="left-nav">
+                <img class="left-header-img" src="img/img_drawer_header.png"/>
+                <div class="left-table-list">
+                    <span class="left-table-item" v-for="(item, index) in tableItemList" v-on:click="onTableItemClick(item)">{{ item }}</span>
+                </div>
+                <div class="left-bottom">
+                    <div class="left-bottom-item">
+                        <img class="left-bottom-icon" src="icon/ic_add_black.png"/>
+                        <span class="left-bottom-text">添加表</span>
+                    </div>
+                </div>
+            </div>
+            <div class="right-content">
+
+                <div class="right-hint-div" v-if="thingItemList === null || thingItemList === undefine">
+                    <img src="icon/ic_left_black.png" class="right-hint-icon"/>
+                    <span class="right-hint-text">👈请点击左边标签选择月份</span>
+                </div>
+
+                <div class="right-hint-div" v-else-if="thingItemList.length === 0">
+                    <img src="icon/ic_empty_black.png" class="right-hint-icon"/>
+                    <span class="right-hint-text">还没有记录</span>
+                </div>
+
+                <div class="right-list-item" v-for="(item, index) in thingItemList" v-else>
+                    <p class="right-item-time" v-if="index===0 || thingItemList[index-1].time != item.time">{{ item.time }}</p>
+                    <div class="right-item-text-div" v-on:click="onThingClick(item)">
+                        <p class="right-item-title">{{ item.title }} <span class="right-item-duration">( 耗时: {{ item.duration }} )</span></p>
+                        <p class="right-item-content">{{ getDescription(item.description) }}</p>
+                    </div>
+                </div>
+        
+            </div>
+
+            <!--  对话框  -->
+            <div class="dialog-background" id="dialogBackground" style="display: none;">
+                <div class="dialog-body" id="dialogBody">
+                    <span class="dialog-title" id="dialogTitle">添加事件</span>
+                    <hr/>
+                    <span style="color: red;" v-if="dialogAddHint != ''">{{ dialogAddHint }}</span>
+                    <div style="display: flex;flex-direction: column;" id="dialogThings">
+                            <div class="dialog-thing-item">
+                                <span class="dialog-thing-name">标题</span>
+                                <input id="dialogThingTitle" class="dialog-thing-input" type="text" placeholder="请输入标题"/>
+                            </div>
+                            <div class="dialog-thing-item">
+                                <span class="dialog-thing-name">时间</span>
+                                <input id="dialogThingTime" class="dialog-thing-input" type="date" placeholder="请输入时间"/>
+                            </div>
+                            <div class="dialog-thing-item">
+                                <span class="dialog-thing-name">耗时</span>
+                                <input id="dialogThingDuration" class="dialog-thing-input" type="text" placeholder="请输入耗时"/>
+                            </div>
+                            <div class="dialog-thing-item">
+                                <span class="dialog-thing-name">描述</span>
+                                <textarea id="dialogThingDescription" class="dialog-thing-input" style="height: 6em;" type="text" placeholder="(选填)请输入描述"></textarea>
+                            </div>
+                    </div>
+                    <p id="dialogMessage">你确定要删除这条信息吗？</p>
+                    <div class="dialog-action-div">
+                        <span class="dialog-action-danger-button" id="dialogDanger" v-on:click="onDangerCallback">删除</span>
+                        <div style="flex: 1"></div>
+                        <span class="dialog-action-negative-button" id="dialogNegative" v-on:click="onNegativeCallback">取消</span>
+                        <span class="dialog-action-positive-button" id="dialogPositive" v-on:click="onPositiveCallback">确定</span>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+</html>
