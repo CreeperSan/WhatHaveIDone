@@ -4,7 +4,7 @@ const BrowserWindow = Electron.BrowserWindow
 const ipc = Electron.ipcMain
 const app = Electron.app
 
-// Electron.Menu.setApplicationMenu(null)
+Electron.Menu.setApplicationMenu(null)
 
 function createMainWindow(a){
     let window = new BrowserWindow({
@@ -16,7 +16,7 @@ function createMainWindow(a){
     })
 
     window.loadFile("html/index.html");
-    window.webContents.openDevTools()
+    // window.webContents.openDevTools()
     window.on('closed',()=>{
         window = null;
     })
