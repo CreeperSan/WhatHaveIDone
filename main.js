@@ -7,6 +7,11 @@ const app = Electron.app
 Electron.Menu.setApplicationMenu(null)
 
 function createMainWindow(a){
+    // 初始化文件目录
+    if(!fs.existsSync('data')){
+        fs.mkdirSync('data')
+    }
+    // 创建窗口
     let window = new BrowserWindow({
         minWidth: 800,
         minHeight:480,
@@ -65,11 +70,9 @@ ipc.on('getThingList', function(event, name){
 })
 
 ipc.on('setThingList', function(event, name, content){
-    console.log('1111111111111')
     let contentJson = []
     try{
         contentJson = JSON.parse(content)
-        console.log('222222222222222222')
         const list = []
         for(let i=0; i<contentJson.length; i++){
             let tmpItem = contentJson[i]

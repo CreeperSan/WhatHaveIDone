@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build" : "electron-packager . what_have_i_done --win --out ./build --arch=x64 --app-version=1.0.0 --electron-version=5.0.6 --icon=./icon.ico"
+    "build": "electron-packager . what_have_i_done --win --out ./build --arch=x64 --app-version=1.0.0 --electron-version=5.0.6 --icon=./icon.ico"
   },
   "author": "CreeperSan",
   "license": "MIT",

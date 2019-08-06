@@ -38,6 +38,8 @@
         .right-hint-div{ display: flex;flex: 1;justify-content: center;align-items: center;flex-direction: column; }
         .right-hint-icon{ width: 64px;height:64px; }
         .right-hint-text{ color: black;margin-top: 8px;user-select: none;  }
+        .right-hint-button{ user-select: none;background-color: coral;border-radius: 999px;color: white;padding: 12px 26px;cursor: pointer;transition-duration: 300ms; }
+        .right-hint-button:hover{ box-shadow: gray 0 0 6px;transition-duration: 300ms; }
 
         .dialog-background{ position: fixed;background-color: rgba(0, 0, 0, 0.5);width: 100%;height: 100%;z-index: 999;display: flex;justify-content: center;align-items: center; }
         .dialog-body{ background: white;max-width: 90%;max-height: 90%;margin: 0 auto;padding: 3%;border-radius: 12px; }
@@ -67,18 +69,12 @@
                 <div class="left-table-list">
                     <span class="left-table-item" v-for="(item, index) in tableItemList" v-on:click="onTableItemClick(item)">{{ item }}</span>
                 </div>
-                <div class="left-bottom">
-                    <div class="left-bottom-item" v-on:click="onCreateTableClick">
-                        <img class="left-bottom-icon" src="icon/ic_add_black.png"/>
-                        <span class="left-bottom-text">添加当前月份</span>
-                    </div>
-                </div>
             </div>
             <div class="right-content">
 
                 <div class="right-hint-div" v-if="thingItemList === null || thingItemList === undefine">
                     <img src="icon/ic_left_black.png" class="right-hint-icon"/>
-                    <span class="right-hint-text">👈请点击左边标签选择月份</span>
+                    <span class="right-hint-button">创建事件</span>
                 </div>
 
                 <div class="right-hint-div" v-else-if="thingItemList.length === 0">
